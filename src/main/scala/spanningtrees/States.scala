@@ -11,4 +11,10 @@ trait States {
   }
 
   def newEqClass(state: State): Int = state.max + 1
+
+  def statesFor(x: Int): List[State] =
+    if (x <= 1) List(List(0))
+    else statesFor(x - 1).flatMap { state =>
+      (newEqClass(state) :: state) :: collapse(state).map { _ :: state }
+    }
 }
