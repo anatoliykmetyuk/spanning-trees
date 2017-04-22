@@ -20,7 +20,7 @@ object Main {
       .groupBy(identity).map { case (k, v) => k -> v.size }
       .toList.sortBy(_._2).reverse.take(10)
 
-    println(s"=== TOP 10 POPULAR LETTERS FOR $n ===\n")
+    println(s"=== TOP 10 (out of ${ls.size} overall, ${ls.distinct.size} distinct) POPULAR LETTERS FOR $n ===\n")
     for { (l, freq) <- sorted }
       println(s"=== Frequency: $freq, Letter: $l ===\n${l.show}\n")
   }
