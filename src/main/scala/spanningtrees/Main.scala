@@ -32,11 +32,23 @@ object Main {
     }
   }
 
+  def verticalTree(state: State): Tree[State] =
+    (0 until state.size - 1).foldLeft(List(state)) { (stateTree, id) =>
+      for {
+        st              <- stateTree
+        (one, another)   = (st(id), st(id + 1))
+        sameEqClassFate  = Some(one != another).filter(!_)
+        connectThem     <- booleanDecision(sameEqClassFate)
+      } yield connectThem match {
+        case true =>
+          val commonEqClass = math.min(one, another)
+          st.map { case `one` | `another` => commonEqClass case x => x }
+        
+        case false => st
+      }
+    }
+
   def main(args: Array[String]): Unit = {
-    println( horizontalTree(List(0, 0, 0), Set()) )
+    println( verticalTree(List(0, 1, 2, 3)).size )
   }
-}
-
-object StateDefs {
-
 }
