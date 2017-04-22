@@ -4,7 +4,7 @@ import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
 import org.scalacheck.Gen.choose
 
-import Trees._
+import all._
 
 object MainSpec extends Properties("MainSpec") {
 
