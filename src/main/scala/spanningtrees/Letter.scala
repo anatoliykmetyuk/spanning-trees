@@ -8,6 +8,15 @@ object Letter {
   def make(gridHeight: Int, decisions: List[Boolean]): Letter =
     Letter(decisions.take(gridHeight), decisions.drop(gridHeight))
 
+  /**
+   * In presence of `import cats.syntax.show._`, this
+   * allows to use `letter.show` syntax to convert letters to
+   * Strings.
+   *
+   * Note that this type class is in the companion object of Letter.
+   * This way, there is no need to import it explicitly, since the
+   * compiler searches the companions for type classes.
+   */
   implicit def letterShow: Show[Letter] = new Show[Letter] {
     def show(l: Letter): String = {
       def row(h: Boolean) =  (if (h) "-" else " ") * 4 + "X"

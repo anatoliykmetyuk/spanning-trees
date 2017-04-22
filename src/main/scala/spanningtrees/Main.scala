@@ -1,14 +1,19 @@
 package spanningtrees
 
-import cats.instances.list._
-import cats.syntax.show._
+import cats.instances.list._  // To be able to call `written` below, which takes some List type class which Cats has.
+import cats.syntax.show._     // To be able to call `l.show` on the letters. This import injects the method `show` in the letter via the rich wrapper pattern.
 
-import all._
-import typeclasses._
+import all._          // Trees with States API
+import typeclasses._  // TreeLogger type to log the decisions (which edges to make) made during tree construction, and the type classes for it.
 
+/**
+ * Finds all transition letters for all the states of a grid
+ * of a given height.
+ */
 object Main {
   def main(args: Array[String]): Unit = {
     val n = 5
+    println(s"Number of nodes in one column: $n. Possible states: ${statesFor(n).size}.")
 
     val ls = allLetters[TreeLogger](n).written.map(Letter.make(n, _))
     val sorted = ls
