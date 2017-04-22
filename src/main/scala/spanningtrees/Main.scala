@@ -1,6 +1,7 @@
 package spanningtrees
 
-object Main {
+object Trees extends Trees
+trait Trees {
   type Tree[A] = List[A]
 
   type State = List[Int]
@@ -14,7 +15,7 @@ object Main {
   def newEqClass(state: State): Int = state.max + 1
 
   def statesFor(x: Int): Tree[State] =
-    if (x == 1) List(List(0))
+    if (x <= 1) List(List(0))
     else statesFor(x - 1).flatMap { state =>
       (newEqClass(state) :: state) :: collapse(state).map { _ :: state }
     }
@@ -24,7 +25,7 @@ object Main {
     case None    => List(true, false)
   }
 
-  def horizontalTree(state: State, copied: Set[Int]): Tree[State] = state match {
+  def horizontalTree(state: State, copied: Set[Int] = Set()): Tree[State] = state match {
     case Nil    => List(List())  // One choice - not to connect what we don't have
     case h :: t => booleanDecision( Some( !(copied(h) || t.contains(h)) ).filter(identity) ).flatMap {
       case true  => horizontalTree(t, copied + h).map { substate => h :: substate }
@@ -48,7 +49,22 @@ object Main {
       }
     }
 
+  def letters(state: State): Tree[State] = for {
+    horizontalStep <- horizontalTree(state)
+    verticalStep   <- verticalTree  (horizontalStep)
+  } yield verticalStep
+
+  def allLetters(m: Int): Tree[State] = for {
+    state  <- statesFor(m)
+    letter <- letters(state)
+  } yield letter  
+}
+
+object Main extends Trees {
   def main(args: Array[String]): Unit = {
-    println( verticalTree(List(0, 1, 2, 3)).size )
+    println( statesFor(2) == allLetters(2 - 1) )
+    println(statesFor(2))
+    println
+    println(allLetters(1))
   }
 }
